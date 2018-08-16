@@ -1,0 +1,33 @@
+---
+Name: 'e-cashier'
+---
+# Member:
+#   extensions:
+#     - StoredCreditcardExtension
+eCashier:
+  DefaultCurrency: 'NZD'
+  DefaultOrderClass: 'PGOrder'
+  MerchantSettings:
+    # MerchantHomepageURL: "https://www.nzyogo.co.nz"
+    # SuccessURL: "/cart/checkout/success"
+    # FailureURL: "/cart/checkout/fail"
+    # CancellationURL: "/cart/checkout/cancel"
+    # CardSavedURL: "/cart/checkout/saved"
+    # PaymentScheduledURL: "/cart/checkout/pending"
+  API:
+    POLi: 'https://poliapi.apac.paywithpoli.com/api/v2/Transaction'
+    Paystation: 'https://www.paystation.co.nz/direct/paystation.dll'
+    DPS : 'https://sec.paymentexpress.com/pxaccess/pxpay.aspx'
+  GatewaySettings:
+    POLi:
+        CERT: '/var/www/ca-bundle.crt'
+        # CLIENTCODE: ''
+        # AUTHCODE: ''
+    Paystation:
+        #HMacMode: '0',
+        #HMacSecret: ''
+        paystation: '_empty'
+        # pstn_pi: ''
+        pstn_gi: 'PAYSTATION'
+        pstn_nr: 't'
+        pstn_tm: 't' #test mode

@@ -1,0 +1,9 @@
+---
+Name: paymentgatewaysroutes
+#After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'pg-payment/poli-complete': 'PoliController'
+    'pg-payment/paystation-complete': 'PaystationController'
+    'pg-payment/dps-complete': 'DPSController'
