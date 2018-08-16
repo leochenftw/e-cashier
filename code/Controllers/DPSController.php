@@ -31,42 +31,26 @@ class DPSController extends eCashierController
 
     protected function route($result)
     {
-        Debugger::inspect('stop');
-        $state          =   $result['state'];
-        $orderID        =   $result['order_id'];
-        $url            =   [
-                                'url'       =>  Config::inst()->get('eCashier', 'MerchantSettings')['MerchantHomepageURL'],
-                                'state'     =>  strtolower($state)
-                            ];
+        $state                              =   $result['state'];
+        $orderID                            =   $result['order_id'];
+        $url                                =   [
+                                                    'url'       =>  Config::inst()->get('eCashier', 'MerchantSettings')['SuccessURL'],
+                                                    'state'     =>  strtolower($state)
+                                                ];
 
-        $url            =   Utilities::LinkThis($url, 'order_id', $orderID);
+        $url                                =   Utilities::LinkThis($url, 'order_id', $orderID);
 
         return $this->redirect($url);
     }
 
     protected function handle_postback($data)
     {
-        $result         =   DPS::fetch($data);
-        
-        Debugger::inspect($result);
+        $result             =   DPS::fetch($data);
 
         if ($Order = $this->getOrder($result['MerchantReference'])) {
             // Debugger::inspect($Order);
-            if ($payments = $Order->Payments()) {
-                $payment = $payments->filter(array('MerchantReference' => $result['MerchantReference'], 'TransacID' => $result['TransactionRefNo']))->first();
-            }
-
-            if ($Order->isOpen) {
-
-                if (!empty($Order->RecursiveFrequency)) {
-                    $today = date("Y-m-d 00:00:00");
-                    // $Order->ValidUntil = date('Y-m-d', strtotime($today. ' + ' . $Order->RecursiveFrequency . ' days'));
-                }
-
-                if ($result['TransactionStatusCode'] == 'Completed') {
-                    $Order->isOpen = false;
-                    $Order->write();
-                }
+            if ($payments = $Order->Payments()->exists()) {
+                $payment                    =   $Order->Payments()->filter(['MerchantReference' => $result['MerchantReference']])->first();
             }
 
             if (empty($payment)) {
@@ -76,7 +60,7 @@ class DPSController extends eCashierController
                 $payment->IP                =   $Order->PaidFromIP;
                 $payment->ProxyIP           =   $Order->PaidFromProxyIP;
                 $payment->Amount->Currency  =   $Order->Amount->Currency;
-                $payment->Amount->Amount    =   $result['AmountPaid'];
+                $payment->Amount->Amount    =   $result['AmountSettlement'];
                 $payment->OrderID           =   $Order->ID;
                 $payment->notify($result);
             }

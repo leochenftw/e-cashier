@@ -9,7 +9,7 @@ class PoliController extends eCashierController
         if (!$request->isPost()) {
             SS_Log::log('POLI:: get back', SS_Log::ERR);
             if ($token = $request->getVar('token')) {
-                $result = $this->handle_postback($token);
+                $result =   $this->handle_postback($token);
                 return $this->route($result);
             }
         }
@@ -17,7 +17,7 @@ class PoliController extends eCashierController
         SS_Log::log('POLI:: post back', SS_Log::ERR);
 
         $token = $request->postVar('Token');
-        
+
         if (empty($token)) {
             $token = $request->getVar('token');
         }

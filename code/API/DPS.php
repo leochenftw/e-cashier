@@ -49,13 +49,8 @@ class DPS
         $response   =   self::initiate($amount, $ref);
         $xml        =   simplexml_load_string($response);
         $json       =   json_encode($xml);
-        $array      =   json_decode($json,TRUE);
 
-        if (!empty($array['URI'])) {
-            return $array['URI'];
-        }
-
-        return null;
+        return json_decode($json,TRUE);
     }
 
     public static function fetch($token)

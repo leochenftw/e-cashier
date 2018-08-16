@@ -1,6 +1,7 @@
 <?php
 use SaltedHerring\Grid;
 use Leochenftw\eCashier\API\Poli;
+use Leochenftw\eCashier\API\DPS;
 /**
  * Description
  *
@@ -9,6 +10,14 @@ use Leochenftw\eCashier\API\Poli;
  */
 class PGOrder extends DataObject
 {
+
+    private static $indexes = [
+        'MerchantReference'     =>  [
+                                        'type'  =>  'index',
+                                        'value' =>  'MerchantReference'
+                                    ]
+    ];
+
     /**
      * Database fields
      * @var array
@@ -105,7 +114,7 @@ class PGOrder extends DataObject
         if (empty($this->MerchantReference)) {
             $created = new DateTime('NOW');
             $timestamp = $created->format('YmdHisu');
-            $this->MerchantReference = strtolower(sha1(md5($timestamp.'-'.session_id())));
+            $this->MerchantReference = substr(sha1(md5($timestamp.'-'.session_id())), 0, 8);
         }
     }
 
@@ -139,7 +148,7 @@ class PGOrder extends DataObject
         $this->CustomerID           =   Member::currentUserID();
         $created                    =   new DateTime('NOW');
         $timestamp                  =   $created->format('YmdHisu');
-        $this->MerchantReference    =   strtolower(sha1(md5($timestamp.'-'.session_id())));
+        $this->MerchantReference    =   substr(sha1(md5($timestamp.'-'.session_id())), 0, 8);
     }
 
     public function AjaxPay($provider)
@@ -163,6 +172,18 @@ class PGOrder extends DataObject
                 // if (empty($pay_link)) {
                 //     SS_Log::log("Paystation::::\n" . serialize($pay_link), SS_Log::ERR);
                 // }
+
+                break;
+
+            case 'dps':
+
+                $result             =   DPS::process($this->Amount->Amount, $this->MerchantReference);
+
+                if (!empty($result['URI'])) {
+                    $pay_link       =   $result['URI'];
+                } elseif (!empty($result['ResponseText'])) {
+                    SS_Log::log("DPS::::\n" . serialize($result), SS_Log::ERR);
+                }
 
                 break;
 
