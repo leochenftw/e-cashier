@@ -34,7 +34,7 @@ class PoliController extends eCashierController
         $state          =   $result['state'];
         $orderID        =   $result['order_id'];
         $url            =   [
-                                'url'       =>  Config::inst()->get('eCashier', 'MerchantSettings')['MerchantHomepageURL'],
+                                'url'       =>  \Director::absoluteBaseURL(),
                                 'state'     =>  strtolower($state)
                             ];
 

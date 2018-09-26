@@ -8,7 +8,6 @@ eCashier:
   DefaultCurrency: 'NZD'
   DefaultOrderClass: 'PGOrder'
   MerchantSettings:
-    # MerchantHomepageURL: "https://www.nzyogo.co.nz"
     # SuccessURL: "/cart/checkout/success"
     # FailureURL: "/cart/checkout/fail"
     # CancellationURL: "/cart/checkout/cancel"

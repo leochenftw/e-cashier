@@ -7,14 +7,7 @@ class Poli
 {
     public static function initiate($price, $ref, $order_class = null)
     {
-        //Debugger::inspect($order);
-        /*
-        SaltedPayment::get_merchant_setting('MerchantHomepageURL');
-        SaltedPayment::get_merchant_setting('SuccessURL');
-        SaltedPayment::get_merchant_setting('FailureURL');
-        SaltedPayment::get_merchant_setting('CancellationURL');
-        SaltedPayment::get_merchant_setting('NotificationURL');
-        */
+
         $gateway_endpoint   =   \Config::inst()->get('eCashier', 'API')['POLi'] . '/Initiate';
         $settings           =   \Config::inst()->get('eCashier', 'GatewaySettings')['POLi'];
 
@@ -23,17 +16,12 @@ class Poli
         $auth_code          =   $settings['AUTHCODE'];
         $returnurl          =   \Director::absoluteBaseURL() . 'pg-payment/poli-complete';
 
-        // "SuccessURL":"' . SaltedPayment::get_merchant_setting('SuccessURL') . '",
-        // "FailureURL":"' . SaltedPayment::get_merchant_setting('FailureURL') . '",
-        // "CancellationURL":"' . SaltedPayment::get_merchant_setting('CancellationURL') . '",
-        // "NotificationURL":"' . SaltedPayment::get_merchant_setting('NotificationURL') . '"
-
         $json_builder       =   '{
                                     "Amount":"' . $price . '",
                                     "CurrencyCode":"NZD",
                                     "MerchantData": "' . (!empty($order_class) ? $order_class : \Config::inst()->get('eCashier', 'DefaultOrderClass')) . '",
                                     "MerchantReference":"' . $ref . '",
-                                    "MerchantHomepageURL":"' . $returnurl . '",
+                                    "MerchantHomepageURL":"' . \Director::absoluteBaseURL() . '",
                                     "SuccessURL":"' . $returnurl . '",
                                     "FailureURL":"' . $returnurl . '",
                                     "CancellationURL":"' . $returnurl . '",
