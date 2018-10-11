@@ -62,8 +62,9 @@ class DPSController extends eCashierController
                 $payment->Amount->Currency  =   $Order->Amount->Currency;
                 $payment->Amount->Amount    =   $result['AmountSettlement'];
                 $payment->OrderID           =   $Order->ID;
-                $payment->notify($result);
             }
+
+            $payment->notify($result);
 
             $Order->onPaymentUpdate($payment->Status);
             return $this->route_data($payment->Status, $Order->ID);
