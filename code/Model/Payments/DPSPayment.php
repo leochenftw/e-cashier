@@ -31,7 +31,7 @@ class DPSPayment extends BasePaymentModel
             }
             // SS_Log::log($key . '::' . $this->$key, SS_Log::WARN);
         }
-        
+        $this->Amount->Amount   =   $data['AmountSettlement'];
         $this->IP               =   $data['ClientInfo'];
         $this->TransacID        =   $data['TxnId'];
         $this->Status           =   $data['Success'] == '1' ? 'Success' : 'Failure';
